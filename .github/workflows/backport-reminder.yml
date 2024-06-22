@@ -2,8 +2,6 @@ name: Backport Reminder
 
 on:
   pull_request:
-    branches-ignore:
-      - fork
     types:
       [auto_merge_enabled, review_requested, labeled, unlabeled, synchronize]
     branches:
