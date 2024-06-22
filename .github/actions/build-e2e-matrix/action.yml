@@ -20,7 +20,7 @@ runs:
           const defaultOptions = {
             "java-version": java,
             runner: defaultRunner,
-            edition: "ee",
+            edition: "oss",
             context: "folder"
           };
 
