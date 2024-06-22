@@ -167,69 +167,72 @@ jobs:
       - name: Run Snowplow micro
         uses: ./.github/actions/run-snowplow-micro
 
-      - name: Run OSS-specific Cypress tests
-        if: matrix.edition == 'oss' && github.event_name != 'schedule'
-        run: |
-          yarn run test-cypress-run \
-          --env grepTags=@OSS,grepOmitFiltered=true \
-          --spec './e2e/test/scenarios/**/*.cy.spec.(js|ts)' \
-          --browser 'replay-chromium'
+      - name: Run Cypress tests
+        run: yarn run test-cypress
 
-      - name: Run slow and resource-intensive Cypress tests
-        if: matrix.name == 'slow' && github.event_name != 'schedule'
-        run: |
-          yarn run test-cypress-run \
-          --env grepTags="@slow",grepOmitFiltered=true \
-          --spec './e2e/test/scenarios/**/*.cy.spec.(js|ts)' \
-          --browser 'replay-chromium'
+      # - name: Run OSS-specific Cypress tests
+      #   if: matrix.edition == 'oss' && github.event_name != 'schedule'
+      #   run: |
+      #     yarn run test-cypress-run \
+      #     --env grepTags=@OSS,grepOmitFiltered=true \
+      #     --spec './e2e/test/scenarios/**/*.cy.spec.(js|ts)' \
+      #     --browser 'replay-chromium'
 
-      - name: Run Flaky Cypress tests
-        if: matrix.name == 'flaky' && github.event_name != 'schedule'
-        run: |
-          yarn run test-cypress-run \
-          --env grepTags="@flaky --@quarantine",grepOmitFiltered=true \
-          --spec './e2e/test/scenarios/**/*.cy.spec.(js|ts)' \
-          --browser 'replay-chromium'
+      # - name: Run slow and resource-intensive Cypress tests
+      #   if: matrix.name == 'slow' && github.event_name != 'schedule'
+      #   run: |
+      #     yarn run test-cypress-run \
+      #     --env grepTags="@slow",grepOmitFiltered=true \
+      #     --spec './e2e/test/scenarios/**/*.cy.spec.(js|ts)' \
+      #     --browser 'replay-chromium'
 
-      - name: Run EE Cypress tests on ${{ matrix.name }}
-        if: matrix.context == 'folder' && github.event_name != 'schedule'
-        run: |
-          yarn run test-cypress-run \
-          --env grepTags="-@slow+-@mongo+-@flaky --@quarantine",grepOmitFiltered=true \
-          --folder ${{ matrix.name }} \
-          --browser 'replay-chromium'
+      # - name: Run Flaky Cypress tests
+      #   if: matrix.name == 'flaky' && github.event_name != 'schedule'
+      #   run: |
+      #     yarn run test-cypress-run \
+      #     --env grepTags="@flaky --@quarantine",grepOmitFiltered=true \
+      #     --spec './e2e/test/scenarios/**/*.cy.spec.(js|ts)' \
+      #     --browser 'replay-chromium'
 
-      - name: Run E2E tests that depend on Mongo
-        if: matrix.name == 'mongo'
-        run: |
-          yarn run test-cypress-run \
-          --env grepTags="@mongo --@quarantine",grepOmitFiltered=true \
-          --spec './e2e/test/scenarios/**/*.cy.spec.(js|ts)' \
-          --browser 'replay-chromium'
-        env:
-          CYPRESS_QA_DB_MONGO: true
+      # - name: Run EE Cypress tests on ${{ matrix.name }}
+      #   if: matrix.context == 'folder' && github.event_name != 'schedule'
+      #   run: |
+      #     yarn run test-cypress-run \
+      #     --env grepTags="-@slow+-@mongo+-@flaky --@quarantine",grepOmitFiltered=true \
+      #     --folder ${{ matrix.name }} \
+      #     --browser 'replay-chromium'
 
-      - name: Upload Test Results
-        uses: ./.github/actions/upload-test-results
-        if: always()
-        with:
-          input-path: ./target/junit
-          output-name: e2e-${{ matrix.name }}
-          bucket: ${{ vars.AWS_S3_TEST_RESULTS_BUCKET }}
-          aws-access-key-id: ${{ secrets.AWS_TEST_RESULTS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_TEST_RESULTS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.AWS_REGION }}
-          trunk-api-token: ${{ secrets.TRUNK_API_TOKEN }}
+      # - name: Run E2E tests that depend on Mongo
+      #   if: matrix.name == 'mongo'
+      #   run: |
+      #     yarn run test-cypress-run \
+      #     --env grepTags="@mongo --@quarantine",grepOmitFiltered=true \
+      #     --spec './e2e/test/scenarios/**/*.cy.spec.(js|ts)' \
+      #     --browser 'replay-chromium'
+      #   env:
+      #     CYPRESS_QA_DB_MONGO: true
 
-      - name: Upload Cypress Artifacts upon failure
-        uses: actions/upload-artifact@v4
-        if: failure()
-        with:
-          name: cypress-recording-${{ matrix.name }}-${{ matrix.edition }}
-          path: |
-            ./cypress
-            ./logs/test.log
-          if-no-files-found: ignore
+      # - name: Upload Test Results
+      #   uses: ./.github/actions/upload-test-results
+      #   if: always()
+      #   with:
+      #     input-path: ./target/junit
+      #     output-name: e2e-${{ matrix.name }}
+      #     bucket: ${{ vars.AWS_S3_TEST_RESULTS_BUCKET }}
+      #     aws-access-key-id: ${{ secrets.AWS_TEST_RESULTS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_TEST_RESULTS_SECRET_ACCESS_KEY }}
+      #     aws-region: ${{ vars.AWS_REGION }}
+      #     trunk-api-token: ${{ secrets.TRUNK_API_TOKEN }}
+
+      # - name: Upload Cypress Artifacts upon failure
+      #   uses: actions/upload-artifact@v4
+      #   if: failure()
+      #   with:
+      #     name: cypress-recording-${{ matrix.name }}-${{ matrix.edition }}
+      #     path: |
+      #       ./cypress
+      #       ./logs/test.log
+      #     if-no-files-found: ignore
 
   e2e-tests-skipped-stub:
     needs: [e2e-tests, e2e-matrix-builder]
