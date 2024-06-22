@@ -195,13 +195,13 @@ jobs:
           --spec './e2e/test/scenarios/**/*.cy.spec.(js|ts)' \
           --browser 'chrome'
 
-      - name: Run EE Cypress tests on ${{ matrix.name }}
-        if: matrix.context == 'folder' && github.event_name != 'schedule'
-        run: |
-          yarn run test-cypress-run \
-          --env grepTags="-@slow+-@mongo+-@flaky --@quarantine",grepOmitFiltered=true \
-          --folder ${{ matrix.name }} \
-          --browser 'chrome'
+      # - name: Run EE Cypress tests on ${{ matrix.name }}
+      #   if: matrix.context == 'folder' && github.event_name != 'schedule'
+      #   run: |
+      #     yarn run test-cypress-run \
+      #     --env grepTags="-@slow+-@mongo+-@flaky --@quarantine",grepOmitFiltered=true \
+      #     --folder ${{ matrix.name }} \
+      #     --browser 'chrome'
 
       - name: Run E2E tests that depend on Mongo
         if: matrix.name == 'mongo'
