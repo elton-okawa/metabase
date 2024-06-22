@@ -3,20 +3,20 @@ name: Migrations
 on:
   push:
     branches:
-      - 'master'
-      - 'release-**'
+      - "master"
+      - "release-**"
   pull_request:
-
+    branches-ignore:
+      - fork
 jobs:
-
   check-migrations:
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
-    - uses: actions/checkout@v4
-    - name: Prepare back-end environment
-      uses: ./.github/actions/prepare-backend
-      with:
-        m2-cache-key: check-migrations
-    - name: Verify Liquibase Migrations
-      run: ./bin/lint-migrations-file.sh
+      - uses: actions/checkout@v4
+      - name: Prepare back-end environment
+        uses: ./.github/actions/prepare-backend
+        with:
+          m2-cache-key: check-migrations
+      - name: Verify Liquibase Migrations
+        run: ./bin/lint-migrations-file.sh

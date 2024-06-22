@@ -2,8 +2,10 @@ name: Snowplow
 
 on:
   pull_request:
+    branches-ignore:
+      - fork
     branches:
-      - '**'
+      - "**"
 
 jobs:
   files-changed:

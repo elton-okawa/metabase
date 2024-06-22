@@ -1,6 +1,8 @@
 name: Auto-backport
 on:
   pull_request:
+    branches-ignore:
+      - fork
     types: [closed, labeled]
 
 jobs:

@@ -1,6 +1,8 @@
 name: Update changelog for MBQL library changes
 on:
   pull_request:
+    branches-ignore:
+      - fork
     types:
       - opened
       - reopened

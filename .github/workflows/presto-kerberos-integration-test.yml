@@ -2,13 +2,15 @@ name: Kerberized Presto Integration Test
 
 on:
   pull_request:
+    branches-ignore:
+      - fork
   push:
     branches:
       - master
-      - 'release**'
-      - 'feature**'
+      - "release**"
+      - "feature**"
     tags:
-      - '**'
+      - "**"
 
 jobs:
   files-changed:

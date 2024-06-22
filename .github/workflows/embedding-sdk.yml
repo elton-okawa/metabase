@@ -6,6 +6,8 @@ on:
       - "master"
       - "release-**"
   pull_request:
+    branches-ignore:
+      - fork
     types: [opened, synchronize, reopened, ready_for_review]
 
 concurrency:

@@ -2,6 +2,8 @@ name: Prevent backport.sh from being merged
 
 on:
   pull_request:
+    branches-ignore:
+      - fork
     types: [opened, synchronize, reopened]
 
 jobs:
